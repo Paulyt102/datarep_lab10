@@ -14,6 +14,9 @@ app.use(function (req, res, next) {
         "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, '../build')));
+app.use('/static', express.static(path.join(__dirname, 'build//static')));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -21,7 +24,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-const strConnection = 'mongodb+srv://admin:admin@cluster0.hrgmz.mongodb.net/MyFilms?retryWrites=true&w=majority';
+const strConnection = 'mongodb+srv://admin:admin@cluster0.8v8zb.mongodb.net/MyFilms?retryWrites=true&w=majority';
+
 mongoose.connect(strConnection, {useNewUrlParser: true});
 
 const Schema = mongoose.Schema;
@@ -89,7 +93,10 @@ app.post('/api/movies', (req, res) => {
 
     res.send('Data Recieved!');
 })
-
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/../build/index.html'));//send file back index.html
+    });
+    
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
